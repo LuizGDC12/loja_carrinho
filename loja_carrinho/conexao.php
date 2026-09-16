@@ -4,7 +4,7 @@
 
 $host = "localhost";        // Onde o MySQL está rodando (nossa própria máquina)
 $usuario = "root";          // Usuário padrão do MySQL
-$senha = "luizgustavoBR12";  // Senha do MySQL
+$senha = "SUA_SENHA_AQUI";  // Senha do MySQL
 $banco = "carrinho_compras"; // Nome do banco de dados que vamos usar
 
 // Cria a conexão com o banco usando os dados acima
