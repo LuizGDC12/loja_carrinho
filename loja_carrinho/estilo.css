@@ -1,0 +1,442 @@
+:root {
+  --bg: #FAF6EF;
+  --tinta: #1E2A32;
+  --destaque: #D9A441;
+  --secundaria: #2F5D57;
+  --borda: #DDD4C0;
+  --branco: #FFFFFF;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--tinta);
+  font-family: 'Inter', sans-serif;
+  line-height: 1.5;
+}
+
+h1, h2, h3 {
+  font-family: 'Fraunces', serif;
+  font-weight: 600;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.25rem 2rem;
+  border-bottom: 2px solid var(--tinta);
+}
+
+header .logo {
+  font-family: 'Fraunces', serif;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--tinta);
+  text-decoration: none;
+}
+
+header nav a {
+  color: var(--tinta);
+  text-decoration: none;
+  margin-left: 1.5rem;
+  padding-bottom: 2px;
+  border-bottom: 2px solid transparent;
+  transition: border-color 0.2s ease;
+}
+
+header nav a:hover {
+  border-color: var(--destaque);
+}
+
+main {
+  max-width: 960px;
+  margin: 2.5rem auto;
+  padding: 0 1.5rem;
+}
+
+.voltar {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: var(--secundaria);
+  text-decoration: none;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.voltar:hover {
+  color: var(--destaque);
+}
+
+.produtos {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+.produto-card {
+  border: 1px solid var(--borda);
+  border-top: 3px solid var(--tinta);
+  border-radius: 10px;
+  background: var(--branco);
+  padding: 1.25rem;
+  transition: border-top-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Efeito de "leve subida" ao passar o mouse */
+.produto-card:hover {
+  border-top-color: var(--destaque);
+  transform: translateY(-6px);
+  box-shadow: 0 8px 16px rgba(30, 42, 50, 0.12);
+}
+
+.produto-card h3 {
+  font-size: 1.1rem;
+  margin-bottom: 0.4rem;
+}
+
+.produto-card .preco {
+  color: var(--secundaria);
+  font-weight: 600;
+  margin: 0.5rem 0;
+}
+
+.produto-card .estoque {
+  font-size: 0.85rem;
+  color: #6b6459;
+}
+
+.foto-produto {
+  width: 100%;
+  height: 240px;
+  object-fit: contain;
+  object-position: center;
+  background: #F1ECE0;
+  border-radius: 6px;
+  margin-bottom: 0.75rem;
+  padding: 0.75rem;
+  display: block;
+}
+
+/* Container que organiza os botões de ação dentro do card, um embaixo do outro */
+.acoes-produto {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+}
+
+form {
+  max-width: 360px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  margin-top: 1.5rem;
+}
+
+form label {
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+form input, form textarea {
+  padding: 0.6rem 0.75rem;
+  border: 1px solid var(--borda);
+  border-radius: 6px;
+  background: var(--branco);
+  font-family: 'Inter', sans-serif;
+  font-size: 1rem;
+}
+
+form input:focus, form textarea:focus {
+  outline: none;
+  border-color: var(--destaque);
+}
+
+button, .botao {
+  background: var(--tinta);
+  color: var(--branco);
+  border: none;
+  border-radius: 6px;
+  padding: 0.7rem 1.2rem;
+  font-family: 'Inter', sans-serif;
+  font-size: 1rem;
+  cursor: pointer;
+  text-decoration: none;
+  text-align: center;
+  display: inline-block;
+  width: fit-content;
+}
+
+button:hover, .botao:hover {
+  background: var(--secundaria);
+}
+
+/* ===== Botão "+" no cabeçalho (admin) ===== */
+.botao-add {
+  background: var(--destaque);
+  color: var(--tinta);
+  border: none;
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  line-height: 1;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 1rem;
+}
+
+.botao-add:hover {
+  background: var(--secundaria);
+  color: var(--branco);
+}
+
+/* ===== Linha com nome do produto + menu de três pontinhos ===== */
+.produto-cabecalho {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+
+.menu-card {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.dots-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.3rem;
+  line-height: 1;
+  color: #9a9284;
+  padding: 0.1rem 0.3rem;
+  transition: color 0.2s ease;
+}
+
+.dots-btn:hover {
+  color: var(--destaque);
+}
+
+.dropdown {
+  display: none;
+  position: absolute;
+  right: 0;
+  top: 110%;
+  background: var(--branco);
+  border: 1px solid var(--borda);
+  border-radius: 8px;
+  box-shadow: 0 6px 16px rgba(30, 42, 50, 0.15);
+  min-width: 120px;
+  z-index: 10;
+}
+
+.dropdown.aberto {
+  display: block;
+}
+
+.dropdown a {
+  display: block;
+  padding: 0.6rem 1rem;
+  color: var(--tinta);
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+
+.dropdown a:hover {
+  background: var(--bg);
+}
+
+/* ===== Página de detalhe do produto ===== */
+.produto-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+
+.produto-detalhe {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2.5rem;
+  margin-top: 1.5rem;
+}
+
+.produto-detalhe-imagem img {
+  width: 100%;
+  border-radius: 10px;
+  object-fit: cover;
+}
+
+.preco-grande {
+  font-size: 1.8rem;
+  color: var(--secundaria);
+  font-weight: 700;
+  margin: 0.75rem 0;
+}
+
+.descricao {
+  margin: 1rem 0;
+  color: #4a453d;
+}
+
+.form-compra {
+  max-width: 100%;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 0.75rem;
+}
+
+.form-compra input[type="number"] {
+  width: 80px;
+}
+
+.botao-secundario {
+  background: var(--branco);
+  color: var(--tinta);
+  border: 2px solid var(--tinta);
+}
+
+.botao-secundario:hover {
+  background: var(--bg);
+}
+
+@media (max-width: 640px) {
+  .produto-detalhe {
+    grid-template-columns: 1fr;
+  }
+}
+
+.carrinho-link {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  color: var(--tinta);
+  text-decoration: none;
+  margin-left: 1.5rem;
+  transition: color 0.2s ease;
+}
+
+.carrinho-link:hover {
+  color: var(--destaque);
+}
+
+.badge-carrinho {
+  position: absolute;
+  top: -8px;
+  right: -10px;
+  background: linear-gradient(135deg, #FF7A45, #E63946);
+  color: white;
+  font-size: 0.7rem;
+  font-weight: 700;
+  min-width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 4px;
+  font-family: 'Inter', sans-serif;
+}
+
+/* ===== Lista de itens do carrinho (estilo "linha", não "card") ===== */
+.carrinho-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  margin-top: 1.5rem;
+}
+
+.carrinho-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.9rem 1.1rem;
+  background: var(--branco);
+  border: 1px solid var(--borda);
+  border-radius: 10px;
+}
+
+.carrinho-item input[type="checkbox"] {
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+}
+
+.carrinho-item-foto {
+  width: 64px;
+  height: 64px;
+  object-fit: contain;
+  background: #F1ECE0;
+  border-radius: 6px;
+  padding: 0.3rem;
+  flex-shrink: 0;
+}
+
+.carrinho-item-info {
+  flex: 1;
+  min-width: 0; /* permite o texto truncar em vez de estourar a linha */
+}
+
+.carrinho-item-nome {
+  font-family: 'Fraunces', serif;
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0 0 0.2rem 0;
+
+  /* Trunca em no máximo 2 linhas, com "..." no final */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.carrinho-item-qtd {
+  font-size: 0.85rem;
+  color: #6b6459;
+}
+
+.carrinho-item-preco {
+  text-align: right;
+  flex-shrink: 0;
+  min-width: 110px;
+}
+
+.carrinho-item-preco .subtotal {
+  font-weight: 700;
+  color: var(--secundaria);
+  font-size: 1.05rem;
+}
+
+.botao-desabilitado {
+  background: #C9C2B4;
+  color: #6b6459;
+  border: none;
+  border-radius: 6px;
+  padding: 0.7rem 1.2rem;
+  font-family: 'Inter', sans-serif;
+  font-size: 1rem;
+  cursor: not-allowed;
+  text-align: center;
+  width: fit-content;
+}
+
+.aviso-erro {
+  background: #F8E4E0;
+  color: #8B2E24;
+  border: 1px solid #E3B5AC;
+  border-radius: 8px;
+  padding: 0.8rem 1.1rem;
+  margin-bottom: 1rem;
+}
