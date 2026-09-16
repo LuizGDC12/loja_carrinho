@@ -20,7 +20,7 @@ include "cabecalho.php";
 <div class="carrinho-lista">
     <?php
     $stmt = $conexao->prepare("
-        SELECT c.id AS id_item, p.nome, p.valor, p.imagem, c.quantidade, (p.valor * c.quantidade) AS subtotal
+        SELECT c.id AS id_item, p.nome, p.valor, p.imagem, p.quantidade_estoque, c.quantidade, (p.valor * c.quantidade) AS subtotal
         FROM carrinho c
         JOIN produtos p ON c.id_produto = p.id
         WHERE c.id_cliente = ?
@@ -42,7 +42,14 @@ include "cabecalho.php";
 
         echo "<div class='carrinho-item-info'>";
         echo "<p class='carrinho-item-nome'>" . htmlspecialchars($item["nome"]) . "</p>";
-        echo "<p class='carrinho-item-qtd'>Quantidade: " . $item["quantidade"] . "</p>";
+
+        echo "<div class='carrinho-item-controles'>";
+        echo "<a href='carrinho_atualizar.php?id_item=" . $item["id_item"] . "&acao=menos' class='stepper-btn'>&minus;</a>";
+        echo "<span>" . $item["quantidade"] . "</span>";
+        echo "<a href='carrinho_atualizar.php?id_item=" . $item["id_item"] . "&acao=mais' class='stepper-btn'>&plus;</a>";
+        echo "</div>";
+
+        echo "<a href='carrinho_remover.php?id_item=" . $item["id_item"] . "' class='remover-link'>Remover do carrinho</a>";
         echo "</div>";
 
         echo "<div class='carrinho-item-preco'>";

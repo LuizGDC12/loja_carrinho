@@ -8,23 +8,28 @@ if (!isset($_SESSION["id_cliente"])) {
 }
 
 $id_produto = $_POST["id_produto"] ?? $_GET["id_produto"];
-$quantidade = $_POST["quantidade"] ?? 1;
+$quantidade = $_POST["quantidade"] ?? $_GET["quantidade"] ?? 1;
 
-$stmt = $conexao->prepare("SELECT nome, valor, quantidade_estoque FROM produtos WHERE id = ?");
-$stmt->bind_param("i", $id_produto);
-$stmt->execute();
-$produto = $stmt->get_result()->fetch_assoc();
+// Verificação + desconto em UM ÚNICO comando: só desconta SE ainda houver estoque suficiente.
+// A condição "AND quantidade_estoque >= ?" impede que o número fique negativo,
+// mesmo que dois pedidos cheguem quase ao mesmo tempo.
+$atualizar_estoque = $conexao->prepare("UPDATE produtos SET quantidade_estoque = quantidade_estoque - ? WHERE id = ? AND quantidade_estoque >= ?");
+$atualizar_estoque->bind_param("iii", $quantidade, $id_produto, $quantidade);
+$atualizar_estoque->execute();
 
-if (!$produto || $quantidade > $produto["quantidade_estoque"]) {
+// affected_rows diz quantas linhas o UPDATE realmente mudou.
+// Se for 0, significa que a condição "quantidade_estoque >= ?" falhou, ou seja: não tinha estoque.
+if ($atualizar_estoque->affected_rows === 0) {
     header("Location: produto.php?id=" . $id_produto . "&erro=estoque");
     exit;
 }
 
-$subtotal = $produto["valor"] * $quantidade;
+$stmt = $conexao->prepare("SELECT nome, valor FROM produtos WHERE id = ?");
+$stmt->bind_param("i", $id_produto);
+$stmt->execute();
+$produto = $stmt->get_result()->fetch_assoc();
 
-$atualizar_estoque = $conexao->prepare("UPDATE produtos SET quantidade_estoque = quantidade_estoque - ? WHERE id = ?");
-$atualizar_estoque->bind_param("ii", $quantidade, $id_produto);
-$atualizar_estoque->execute();
+$subtotal = $produto["valor"] * $quantidade;
 
 include "cabecalho.php";
 ?>

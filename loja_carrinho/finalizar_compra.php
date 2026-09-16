@@ -16,17 +16,12 @@ if (!isset($_POST["itens"]) || count($_POST["itens"]) == 0) {
 
 $itens_selecionados = $_POST["itens"];
 
-include "cabecalho.php";
-?>
-
-<p><a href="index.php" class="voltar">&larr; Voltar para a loja</a></p>
-<h1>Compra finalizada!</h1>
-<div class="carrinho-lista">
-<?php
+// Primeiro, processamos TUDO (compra + estoque), guardando os resultados
 $total = 0;
+$itens_comprados = [];
+$itens_sem_estoque = [];
 
 foreach ($itens_selecionados as $id_item) {
-    // Agora também buscamos p.id (o id do PRODUTO), que precisamos para atualizar o estoque dele
     $stmt = $conexao->prepare("
         SELECT p.id AS id_produto, p.nome, p.valor, p.imagem, c.quantidade, (p.valor * c.quantidade) AS subtotal
         FROM carrinho c
@@ -38,33 +33,57 @@ foreach ($itens_selecionados as $id_item) {
     $item = $stmt->get_result()->fetch_assoc();
 
     if ($item) {
-        $total += $item["subtotal"];
+        $atualizar_estoque = $conexao->prepare("UPDATE produtos SET quantidade_estoque = quantidade_estoque - ? WHERE id = ? AND quantidade_estoque >= ?");
+        $atualizar_estoque->bind_param("iii", $item["quantidade"], $item["id_produto"], $item["quantidade"]);
+        $atualizar_estoque->execute();
 
-        echo "<div class='carrinho-item'>";
-        if ($item["imagem"]) {
-            echo "<img src='" . $item["imagem"] . "' class='carrinho-item-foto'>";
+        if ($atualizar_estoque->affected_rows === 0) {
+            $itens_sem_estoque[] = $item["nome"];
+            continue;
         }
-        echo "<div class='carrinho-item-info'>";
-        echo "<p class='carrinho-item-nome'>" . htmlspecialchars($item["nome"]) . "</p>";
-        echo "<p class='carrinho-item-qtd'>Quantidade: " . $item["quantidade"] . "</p>";
-        echo "</div>";
-        echo "<div class='carrinho-item-preco'><p class='subtotal'>R$ " . number_format($item["subtotal"], 2, ',', '.') . "</p></div>";
-        echo "</div>";
 
-        // 1) Remove o item do carrinho (compra concluída)
+        $total += $item["subtotal"];
+        $itens_comprados[] = $item;
+
         $remover = $conexao->prepare("DELETE FROM carrinho WHERE id = ? AND id_cliente = ?");
         $remover->bind_param("ii", $id_item, $id_cliente);
         $remover->execute();
-
-        // 2) Desconta a quantidade comprada do estoque desse produto
-        $atualizar_estoque = $conexao->prepare("UPDATE produtos SET quantidade_estoque = quantidade_estoque - ? WHERE id = ?");
-        $atualizar_estoque->bind_param("ii", $item["quantidade"], $item["id_produto"]);
-        $atualizar_estoque->execute();
     }
 }
+
+include "cabecalho.php";
 ?>
+
+<p><a href="index.php" class="voltar">&larr; Voltar para a loja</a></p>
+<h1>Compra finalizada!</h1>
+
+<?php if (count($itens_sem_estoque) > 0): ?>
+    <p class="aviso-erro">
+        ⚠️ Estoque esgotado para: <?php echo implode(", ", $itens_sem_estoque); ?>.<br>
+        Esses itens continuam no seu carrinho e não foram cobrados.
+    </p>
+<?php endif; ?>
+
+<?php if (count($itens_comprados) > 0): ?>
+<div class="carrinho-lista">
+    <?php foreach ($itens_comprados as $item): ?>
+        <div class="carrinho-item">
+            <?php if ($item["imagem"]): ?>
+                <img src="<?php echo $item['imagem']; ?>" class="carrinho-item-foto">
+            <?php endif; ?>
+            <div class="carrinho-item-info">
+                <p class="carrinho-item-nome"><?php echo htmlspecialchars($item["nome"]); ?></p>
+                <p class="carrinho-item-qtd">Quantidade: <?php echo $item["quantidade"]; ?></p>
+            </div>
+            <div class="carrinho-item-preco">
+                <p class="subtotal">R$ <?php echo number_format($item["subtotal"], 2, ',', '.'); ?></p>
+            </div>
+        </div>
+    <?php endforeach; ?>
 </div>
 <h2 style="margin-top: 2rem;">Total pago: R$ <?php echo number_format($total, 2, ',', '.'); ?></h2>
-<p style="margin-top: 1rem;"><a href="index.php" class="botao">Voltar para a loja</a></p>
+<?php endif; ?>
+
+<p style="margin-top: 1.5rem;"><a href="index.php" class="botao">Voltar para a loja</a></p>
 
 <?php include "rodape.php"; ?>

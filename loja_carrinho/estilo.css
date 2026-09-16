@@ -437,6 +437,48 @@ button:hover, .botao:hover {
   color: #8B2E24;
   border: 1px solid #E3B5AC;
   border-radius: 8px;
-  padding: 0.8rem 1.1rem;
-  margin-bottom: 1rem;
+  padding: 1.1rem 1.4rem;
+  margin: 1.5rem 0;
+  font-weight: 600;
+  font-size: 1.05rem;
+  text-align: center;
+}
+
+.carrinho-item-controles {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.4rem;
+}
+
+.stepper-btn {
+  width: 26px;
+  height: 26px;
+  border: 1px solid var(--borda);
+  background: var(--branco);
+  border-radius: 6px;
+  text-decoration: none;
+  color: var(--tinta);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.stepper-btn:hover {
+  border-color: var(--destaque);
+  color: var(--destaque);
+}
+
+.remover-link {
+  font-size: 0.8rem;
+  color: #8B2E24;
+  text-decoration: none;
+  margin-top: 0.4rem;
+  display: inline-block;
+}
+
+.remover-link:hover {
+  text-decoration: underline;
 }
